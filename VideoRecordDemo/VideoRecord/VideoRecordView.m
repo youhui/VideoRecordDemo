@@ -32,7 +32,7 @@
         frame.origin.y = frame.size.height;
         self.frame = frame;
         self.windowLevel = UIWindowLevelStatusBar + 1;
-        [self initSubViews];
+        [self setupUI];
         self.originKeyWindow = [[UIApplication sharedApplication].delegate window];
         [self makeKeyAndVisible];
     }
@@ -40,8 +40,8 @@
 }
 
 #pragma mark - 视图
-- (void)initSubViews{
-    _contentView = [[UIView alloc]initWithFrame:self.bounds];
+- (void)setupUI{
+    _contentView = [[UIView alloc] initWithFrame:self.bounds];
     [self addSubview:_contentView];
     _recorderManager = [[VideoRecordManager alloc] init];
     _recorderManager.delegate = self;
@@ -58,7 +58,7 @@
     [self addFocusGensture];
 }
 
-#pragma mark - 点按时聚焦
+#pragma mark - 聚焦手势
 
 - (void)addFocusGensture{
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapScreen:)];
@@ -133,7 +133,7 @@
         CGFloat gap = 7.5;
         rect.size = CGSizeMake(rect.size.width + gap*2, rect.size.height + gap*2);
         rect.origin = CGPointMake(rect.origin.x - gap, rect.origin.y - gap);
-        _recordBackView = [[UIView alloc]initWithFrame:rect];
+        _recordBackView = [[UIView alloc] initWithFrame:rect];
         _recordBackView.backgroundColor = [UIColor whiteColor];
         _recordBackView.alpha = 0.6;
         [_recordBackView.layer setCornerRadius:_recordBackView.frame.size.width/2];
@@ -143,7 +143,7 @@
 
 - (UILabel *)tipLabel{
     if (!_tipLabel) {
-        _tipLabel = [[UILabel alloc]initWithFrame:CGRectMake((self.width - 50)/2, self.recordBackView.origin.y - 30, 100, 20)];
+        _tipLabel = [[UILabel alloc] initWithFrame:CGRectMake((self.width - 50)/2, self.recordBackView.origin.y - 30, 100, 20)];
         _tipLabel.textColor = [UIColor whiteColor];
         _tipLabel.text = @"长按拍摄";
         _tipLabel.font = [UIFont systemFontOfSize:12];
@@ -250,7 +250,7 @@
 
 #pragma mark - 录制结束循环播放视频
 - (void)showVedio:(NSURL *)playUrl{
-    RecordPlayerView *playView= [[RecordPlayerView alloc]initWithFrame:self.bounds];
+    RecordPlayerView *playView= [[RecordPlayerView alloc] initWithFrame:self.bounds];
     playView.backgroundColor = [UIColor clearColor];
     [_contentView addSubview:playView];
     playView.playUrl = playUrl;
