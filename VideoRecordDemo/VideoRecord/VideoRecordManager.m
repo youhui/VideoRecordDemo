@@ -13,6 +13,8 @@ static const CGFloat KMaxRecordTime = 10;    //最大录制时间
 @property (nonatomic, strong) AVCapturePhotoOutput *photoOutput;           //输出图片
 @property (nonatomic, strong) NSTimer *timer;                              //定时器
 @property (nonatomic, assign) CGFloat recordTime;                          //录制时间
+@property (nonatomic, assign) BOOL isStopRecordVideo;                      //是否停止录制
+
 @end
 
 @implementation VideoRecordManager
@@ -128,15 +130,16 @@ static const CGFloat KMaxRecordTime = 10;    //最大录制时间
 }
 
 - (void)startTimer{
-    [self.timer invalidate];
-    self.timer = nil;
+    [self stopTimer];
     self.recordTime = 0;
     [self.timer fire];
 }
 
 - (void)stopTimer{
-    [self.timer invalidate];
-    self.timer = nil;
+    if (_timer) {
+        [_timer invalidate];
+        _timer = nil;
+    }
 }
 
 #pragma mark 准备录制
@@ -214,9 +217,10 @@ static const CGFloat KMaxRecordTime = 10;    //最大录制时间
 }
 
 #pragma mark  停止录制
-- (void)stopCurrentVideoRecording{
+- (void)stopCurrentVideoRecording {
+    self.isStopRecordVideo = YES;
+    [self stopTimer];
     if (self.movieFileOutput.isRecording) {
-        [self stopTimer];
         [_movieFileOutput stopRecording];
     }
 }
@@ -263,7 +267,11 @@ static const CGFloat KMaxRecordTime = 10;    //最大录制时间
 
 // 录制开始
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didStartRecordingToOutputFileAtURL:(NSURL *)fileURL fromConnections:(NSArray *)connections{
-    [self startTimer];
+    if (self.isStopRecordVideo) {
+        [self stopCurrentVideoRecording];
+    } else {
+        [self startTimer];
+    }
 }
 
 // 录制结束
