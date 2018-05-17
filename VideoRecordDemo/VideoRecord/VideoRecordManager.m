@@ -213,6 +213,9 @@ static const CGFloat KMaxRecordTime = 10;    //最大录制时间
     if ([self.captureConnection isVideoOrientationSupported]){
         self.captureConnection.videoOrientation =[self.preViewLayer connection].videoOrientation;
     }
+    
+    self.isStopRecordVideo = NO;
+    
     [_movieFileOutput startRecordingToOutputFileURL:outPutFile recordingDelegate:self];
 }
 
